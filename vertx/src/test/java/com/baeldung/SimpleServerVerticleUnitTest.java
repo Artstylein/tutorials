@@ -17,39 +17,40 @@ import org.junit.runner.RunWith;
 
 @RunWith(VertxUnitRunner.class)
 public class SimpleServerVerticleUnitTest {
-    private Vertx vertx;
+	private Vertx vertx;
 
-    private int port = 8081;
+	private int port = 8081;
 
-    @Before
-    public void setup(TestContext testContext) throws IOException {
-        vertx = Vertx.vertx();
+	@Before
+	public void setup(TestContext testContext) throws IOException {
+		vertx = Vertx.vertx();
 
-        // Pick an available and random
-        ServerSocket socket = new ServerSocket(0);
-        port = socket.getLocalPort();
-        socket.close();
+		// Pick an available and random
+		ServerSocket socket = new ServerSocket(0);
+		port = socket.getLocalPort();
+		System.out.println(port);
+		socket.close();
 
-        DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("http.port", port));
+		DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("http.port", port));
 
-        vertx.deployVerticle(SimpleServerVerticle.class.getName(), options, testContext.asyncAssertSuccess());
-    }
+		vertx.deployVerticle(SimpleServerVerticle.class.getName(), options, testContext.asyncAssertSuccess());
+	}
 
-    @After
-    public void tearDown(TestContext testContext) {
-        vertx.close(testContext.asyncAssertSuccess());
-    }
+	@After
+	public void tearDown(TestContext testContext) {
+		vertx.close(testContext.asyncAssertSuccess());
+	}
 
-    @Test
-    public void whenReceivedResponse_thenSuccess(TestContext testContext) {
-        final Async async = testContext.async();
+	@Test
+	public void whenReceivedResponse_thenSuccess(TestContext testContext) {
+		final Async async = testContext.async();
 
-        vertx.createHttpClient()
-            .getNow(port, "localhost", "/", response -> response.handler(responseBody -> {
-                testContext.assertTrue(responseBody.toString()
-                    .contains("Welcome"));
-                async.complete();
-            }));
-    }
-
+		vertx.createHttpClient().getNow(port, "localhost", "/", responseHandler -> {
+			responseHandler.result().handler(responseBody -> {
+				System.out.println("ResponseBody :" + responseBody.toString());
+				testContext.assertTrue(responseBody.toString().contains("Story Book"));
+				async.complete();
+			});
+		});
+	}
 }

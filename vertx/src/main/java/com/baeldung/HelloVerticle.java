@@ -3,8 +3,9 @@ package com.baeldung;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 
 public class HelloVerticle extends AbstractVerticle {
@@ -16,7 +17,7 @@ public class HelloVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void start(Future<Void> future) {
+    public void start(Promise<Void> promise) {
         LOGGER.info("Welcome to Vertx");
     }
 

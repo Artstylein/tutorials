@@ -56,4 +56,10 @@ public class Article {
         this.wordCount = wordCount;
     }
 
+	@Override
+	public String toString() {
+		return "Article [id=" + id + ", content=" + content + ", author=" + author + ", datePublished=" + datePublished
+				+ ", wordCount=" + wordCount + "]";
+	}
+
 }
